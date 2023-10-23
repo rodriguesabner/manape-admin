@@ -3,11 +3,9 @@ import {ActivityIndicator, Image, View} from "react-native";
 import {
     Button,
     Container,
-    InputSearch,
     ItemMenu,
     Layout,
     ListMenuOld,
-    SearchWrapper,
     TextButton,
     TextItemMenu,
     Title,
@@ -20,29 +18,28 @@ import {db} from "../../services/api";
 import {onValue, ref} from "firebase/database";
 import moment from "moment";
 
-const Menu = () => {
+const Testimonials = () => {
     const navigation = useNavigation<NavigationProp<any>>()
-    const [menu, setMenu] = useState([])
+    const [testimonials, setTestimonials] = useState([])
     const [screenLoading, setScreenLoading] = useState(true)
 
     useEffect(() => {
         async function getItems() {
-            const items = ref(db, 'menus');
+            const items = ref(db, 'testimonials');
             onValue(items, (snapshot) => {
                 const data = snapshot.val();
-                const menus = Object.keys(data).map(key => {
+                const items = Object.keys(data).map(key => {
                     return {
                         key,
                         date: moment(data[key].date).format("DD/MM/YYYY HH:mm:ss"),
-                        items: data[key].items,
-                        active: data[key].active
+                        ...data[key]
                     }
                 })
 
-                const orderByDateDesc = menus.sort((a, b) => {
-                    return moment(b.date, "DD/MM/YYYY HH:mm:ss").diff(moment(a.date, "DD/MM/YYYY HH:mm:ss"))
+                const orderByDateDesc = items.sort((a, b) => {
+                    return moment(b.date).diff(moment(a.date))
                 })
-                setMenu(orderByDateDesc)
+                setTestimonials(orderByDateDesc)
             });
         }
 
@@ -54,7 +51,7 @@ const Menu = () => {
     }
 
     const goToDetail = (item: any) => {
-        navigation.navigate("DetailMenu", {item})
+        navigation.navigate("DetailTestimonial", {item})
     }
 
     return (
@@ -68,8 +65,8 @@ const Menu = () => {
         ) : (
             <Layout>
                 <Container>
-                    <Title>Gerencie por completo</Title>
-                    <Title>o seu cardápio da semana</Title>
+                    <Title>Gerencie os depoimentos</Title>
+                    <Title>que seus clientes estão fazendo</Title>
 
                     <Image
                         source={Plant}
@@ -79,28 +76,18 @@ const Menu = () => {
 
                     <WrapperContainer>
                         <View>
-                            <Button onPress={() => goTo('CreateMenu')}>
-                                <TextButton>Novo Cardápio</TextButton>
+                            <Button onPress={() => goTo('CreateTestimonial')}>
+                                <TextButton>Novo Depoimento</TextButton>
                             </Button>
 
-                            <Title>Cardápios Criados</Title>
-
-                            <SearchWrapper>
-                                <InputSearch
-                                    returnKeyType={"search"}
-                                    placeholder={"Pesquisar"}
-                                    onSubmitEditing={() => {
-                                    }}
-                                />
-                            </SearchWrapper>
+                            <Title>Depoimentos Criados</Title>
 
                             <ListMenuOld
-                                data={menu}
+                                data={testimonials}
                                 renderItem={({item}) => (
                                     <ItemMenu onPress={() => goToDetail(item)}>
-                                        {item.active === true &&
-                                            <Image source={Heart} style={{width: 40, height: 30, marginLeft: -5}}/>}
-                                        <TextItemMenu>{item.date.split(" ")[0]}</TextItemMenu>
+                                        <TextItemMenu>{item.name}</TextItemMenu>
+                                        <Image source={Heart} style={{width: 40, height: 30, marginLeft: -5}}/>
                                     </ItemMenu>
                                 )}
                                 keyExtractor={(item, index) => index.toString()}
@@ -113,4 +100,4 @@ const Menu = () => {
     );
 };
 
-export default Menu;
+export default Testimonials;

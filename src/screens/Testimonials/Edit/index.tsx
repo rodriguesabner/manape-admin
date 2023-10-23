@@ -5,7 +5,7 @@ import {
     Input,
     Layout,
     SuggestionButton,
-    SuggestionTextButton,
+    SuggestionTextButton, TextArea,
     TextButton,
     Title
 } from "./styles";
@@ -20,7 +20,7 @@ interface EditItemProps {
     route: any;
 }
 
-const EditItem = (props: EditItemProps) => {
+const EditTestimonial = (props: EditItemProps) => {
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
     const [loading, setLoading] = useState(false)
@@ -31,8 +31,7 @@ const EditItem = (props: EditItemProps) => {
         const {item} = props.route.params
         setName(item.name)
         setDescription(item.description)
-        setIdDocument(item.idDocument)
-        setId(item.id)
+        setId(item.date)
     }, []);
 
     useEffect(() => {
@@ -57,8 +56,8 @@ const EditItem = (props: EditItemProps) => {
     const handleSaveMenu = () => {
         Vibration.vibrate(100)
         Alert.alert(
-            "Deseja alterar o item?",
-            `Você tem certeza que deseja alterar o item "${name}"?`,
+            "Deseja atualizar o depoimento?",
+            `Você tem certeza que deseja alterar o depoimento da "${name}"?`,
             [
                 {
                     text: "Sim",
@@ -80,10 +79,10 @@ const EditItem = (props: EditItemProps) => {
         const data = {
             name,
             description,
-            id
+            date: id
         }
 
-        const dbRef = ref(db, `menus/${idDocument}/items/${id}`);
+        const dbRef = ref(db, `testimonials/${id}`);
         await update(dbRef, data);
 
         setLoading(false)
@@ -106,23 +105,20 @@ const EditItem = (props: EditItemProps) => {
     return (
         <Layout>
             <Container>
-                <Title>Informações do Prato</Title>
+                <Title>Informações do Depoimento</Title>
 
-                <Text>Nome do Prato</Text>
+                <Text>Nome</Text>
                 <Input
-                    placeholder="Strogonoff"
+                    placeholder="Qual o nome da pessoa?"
                     onChangeText={setName}
                     value={name}/>
 
                 <Text>Descrição</Text>
-                <Input
-                    placeholder="Com palmito e frango do futuro"
+                <TextArea
+                    placeholder="O que ela disse sobre a Manapê?"
                     onChangeText={setDescription}
-                    value={description}/>
-
-                <SuggestionButton onPress={() => props.navigation.navigate("Suggestions")}>
-                    <SuggestionTextButton>Sugestões</SuggestionTextButton>
-                </SuggestionButton>
+                    value={description}
+                />
 
                 <ButtonFinish onPress={() => handleSaveMenu()}>
                     <TextButton>
@@ -134,4 +130,4 @@ const EditItem = (props: EditItemProps) => {
     );
 };
 
-export default EditItem;
+export default EditTestimonial;

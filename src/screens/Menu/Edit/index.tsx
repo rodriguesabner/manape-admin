@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-    Button,
     ButtonFinish,
     Container,
     Input,
@@ -10,67 +9,60 @@ import {
     TextButton,
     Title
 } from "./styles";
-import {Alert, FlatList, Image, Text, Vibration} from "react-native";
-import Item from "./Item";
-import Plant from "../../../assets/images/plant.png";
+import {Alert, Text, Vibration} from "react-native";
 import {db} from "../../../services/api";
-import {get, onValue, ref, update} from "firebase/database";
-import {NavigationProp, useNavigation} from "@react-navigation/native";
+import {ref, update} from "firebase/database";
+import {NavigationProp} from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const CreateMenu = () => {
-    const navigation = useNavigation<NavigationProp<any>>()
-    const [items, setItems] = useState([])
+interface EditItemProps {
+    navigation: NavigationProp<any>;
+    route: any;
+}
+
+const EditItem = (props: EditItemProps) => {
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
     const [loading, setLoading] = useState(false)
+    const [idDocument, setIdDocument] = useState()
+    const [id, setId] = useState()
 
-    const handleAddItem = () => {
-        const alreadyExists = items.find(item => item.name === name)
-        if (alreadyExists) {
-            Alert.alert("Item já adicionado")
-            return;
+    useEffect(() => {
+        const {item} = props.route.params
+        setName(item.name)
+        setDescription(item.description)
+        setIdDocument(item.idDocument)
+        setId(item.id)
+    }, []);
+
+    useEffect(() => {
+        async function getItemStorage() {
+            const data = await AsyncStorage.getItem('suggestion');
+            if (data) {
+                const item = JSON.parse(data);
+                setName(item.name)
+                setDescription(item.description)
+
+                await AsyncStorage.removeItem('suggestion');
+            }
         }
 
-        if (!name || !description) {
-            Alert.alert("Preencha todos os campos")
-            return;
-        }
-        setItems([...items, {name, description}])
-        setName("")
-        setDescription("")
-    }
+        const unsubscribe = props.navigation.addListener('focus', () => {
+            getItemStorage()
+        });
 
-    const handleClickItem = (name: string) => {
-        Vibration.vibrate(100)
-        Alert.alert(
-            "Deseja remover o item?",
-            `Você tem certeza que deseja remover o item "${name}"?`,
-            [
-                {
-                    text: "Sim",
-                    onPress: () => {
-                        setItems(items.filter(item => item.name !== name))
-                    }
-                },
-                {
-                    text: "Não",
-                    onPress: () => {
-                        return;
-                    }
-                }
-            ]
-        )
-    }
+        return unsubscribe;
+    }, [props.navigation]);
 
     const handleSaveMenu = () => {
+        Vibration.vibrate(100)
         Alert.alert(
-            "Deseja salvar o cardápio?",
-            undefined,
+            "Deseja alterar o item?",
+            `Você tem certeza que deseja alterar o item "${name}"?`,
             [
                 {
                     text: "Sim",
                     onPress: () => {
-                        setLoading(true)
                         storeDataFirebase()
                     }
                 },
@@ -84,41 +76,25 @@ const CreateMenu = () => {
         )
     }
 
-    const unactiveOldData = async () => {
-        const dbRef = ref(db, `menus`);
-        await get(dbRef).then((snapshot) => {
-            const data = snapshot.val();
-            for (let index in data) {
-                if (data[index].active === true) {
-                    const dbRef = ref(db, `menus/${index}`);
-                    update(dbRef, {active: false});
-                }
-            }
-        })
-    }
-
     const storeDataFirebase = async () => {
-        await unactiveOldData();
-
-        const index = new Date().getTime();
         const data = {
-            active: true,
-            date: index,
-            items: items
+            name,
+            description,
+            id
         }
 
-        const dbRef = ref(db, `menus/${index}`);
+        const dbRef = ref(db, `menus/${idDocument}/items/${id}`);
         await update(dbRef, data);
 
         setLoading(false)
         Alert.alert(
-            "Cardápio salvo com sucesso!",
+            "O item foi alterado com sucesso!",
             undefined,
             [
                 {
                     text: "Ok",
                     onPress: () => {
-                        navigation.navigate("Home");
+                        props.navigation.navigate("Home");
                         return;
                     }
                 }
@@ -144,45 +120,18 @@ const CreateMenu = () => {
                     onChangeText={setDescription}
                     value={description}/>
 
-                <SuggestionButton>
+                <SuggestionButton onPress={() => props.navigation.navigate("Suggestions")}>
                     <SuggestionTextButton>Sugestões</SuggestionTextButton>
                 </SuggestionButton>
 
-                <Button onPress={() => handleAddItem()}>
-                    <TextButton style={{color: "#c16c36"}}>Adicionar</TextButton>
-                </Button>
-
-                <Image
-                    source={Plant}
-                    style={{width: 150, height: 60, marginLeft: -40, marginTop: -10}}
-                    resizeMode={"contain"}
-                />
-
-                <Title>Itens Adicionados</Title>
-                {items.length <= 0 ? (
-                    <Text>Nenhum item adicionado</Text>
-                ) : (
-                    <FlatList
-                        data={items}
-                        contentContainerStyle={{gap: 20}}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({item, index}) => (
-                            <Item id={index} name={item.name} description={item.description}
-                                  longPress={handleClickItem}/>
-                        )}
-                    />
-                )}
-
-                {items.length > 0 && (
-                    <ButtonFinish onPress={() => handleSaveMenu()}>
-                        <TextButton>
-                            {loading ? "Salvando..." : "Salvar"}
-                        </TextButton>
-                    </ButtonFinish>
-                )}
+                <ButtonFinish onPress={() => handleSaveMenu()}>
+                    <TextButton>
+                        {loading ? "Salvando..." : "Salvar"}
+                    </TextButton>
+                </ButtonFinish>
             </Container>
         </Layout>
     );
 };
 
-export default CreateMenu;
+export default EditItem;

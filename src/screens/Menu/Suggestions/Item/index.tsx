@@ -6,12 +6,12 @@ interface ItemProps {
     id: string|number;
     name: string;
     description: string;
-    longPress: (name: string) => void;
+    longPress: (item: any) => void;
 }
 
 const Item = (props: ItemProps) => {
     return (
-        <Layout onLongPress={() => props.longPress(props.name)}>
+        <Layout onPress={() => props.longPress(props)}>
             <Title>{props.name}</Title>
             <Description>{props.description}</Description>
         </Layout>

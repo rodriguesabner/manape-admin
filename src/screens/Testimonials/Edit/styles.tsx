@@ -23,6 +23,23 @@ export const Input = styled.TextInput.attrs({
   margin-top: 4px;
 `;
 
+export const TextArea = styled.TextInput.attrs({
+    placeholderTextColor: "rgba(85,49,27, .5)",
+    multiline: true,
+    numberOfLines: 4,
+    textAlignVertical: "top"
+})`
+  background-color: rgba(253, 241, 231, .8);
+  border-width: 1px;
+  color: #55311b;
+  border-color: rgb(85, 49, 27, .3);
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 4px;
+  height: 150px;
+`;
+
+
 export const Title = styled.Text`
   font-size: 20px;
   font-family: 'GFS Didot';

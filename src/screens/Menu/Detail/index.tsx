@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, FlatList, Image, Text, Vibration} from "react-native";
+import {Alert, FlatList, Image, Linking, Text, Vibration} from "react-native";
 import {Container, DescriptionMenu, ItemMenu, Layout, Title, TitleMenu} from "../Create/styles";
 import Plant from "../../../assets/images/plant.png";
 import {NavigationProp, useNavigation, useRoute} from "@react-navigation/native";
-import {ref, update, remove} from "firebase/database";
+import {get, ref, remove, update} from "firebase/database";
 import {db} from "../../../services/api";
+import {ShareButton, TextShareButton} from "./styles";
+import {ButtonDelete, ButtonEdit} from "../../Testimonials/Detail/styles";
 
 const DetailMenu = () => {
     const navigation = useNavigation<NavigationProp<any>>()
@@ -64,6 +66,79 @@ const DetailMenu = () => {
         )
     }
 
+    const openWebsite = () => {
+        Linking.openURL('https://vegan-rest.vercel.app/marmitas?download=true');
+    }
+
+    async function deleteItem() {
+        Alert.alert(
+            "Deseja excluir este cardápio?",
+            undefined,
+            [
+                {
+                    text: "Sim",
+                    onPress: () => {
+                        removeItem()
+                    }
+                },
+                {
+                    text: "Não",
+                    onPress: () => {
+                        return;
+                    }
+                }
+            ]
+        )
+    }
+
+    async function toDefault() {
+        Alert.alert(
+            "Deseja tornar este cardápio padrão?",
+            undefined,
+            [
+                {
+                    text: "Sim",
+                    onPress: () => {
+                        setMenuDefault()
+                    }
+                },
+                {
+                    text: "Não",
+                    onPress: () => {
+                        return;
+                    }
+                }
+            ]
+        )
+    }
+
+    const removeItem = async () => {
+        const choosedItem = ref(db, `menus/${item.key}`);
+        await remove(choosedItem);
+        navigation.navigate('Menu')
+    }
+
+    const unactiveOldData = async () => {
+        const dbRef = ref(db, `menus`);
+        await get(dbRef).then((snapshot) => {
+            const data = snapshot.val();
+            for (let index in data) {
+                if (data[index].active === true) {
+                    const dbRef = ref(db, `menus/${index}`);
+                    update(dbRef, {active: false});
+                }
+            }
+        })
+    }
+
+    const setMenuDefault = async () => {
+        await unactiveOldData();
+
+        const choosedItem = ref(db, `menus/${item.key}`);
+        await update(choosedItem, {active: true});
+        navigation.navigate('Menu')
+    }
+
     return (
         <Layout>
             <Container>
@@ -75,10 +150,14 @@ const DetailMenu = () => {
                     resizeMode={"contain"}
                 />
 
-                <Title>Deseja editar?</Title>
+                <Title>Deseja compartilhar?</Title>
                 <Text>
-                    É simples, basta tocar em cima do item desejado.
+                    Toque no botão abaixo para compartilhar o cardápio da semana com seus clientes.
                 </Text>
+
+                <ShareButton onPress={() => openWebsite()}>
+                    <TextShareButton>Compartilhar</TextShareButton>
+                </ShareButton>
 
                 <Image
                     source={Plant}
@@ -101,6 +180,12 @@ const DetailMenu = () => {
                     />
                 )}
 
+                <ButtonEdit onPress={() => toDefault()}>
+                    <Text style={{color: "#fff", fontWeight: 'bold'}}>Tornar Padrão</Text>
+                </ButtonEdit>
+                <ButtonDelete style={{marginTop: 16}} onPress={() => deleteItem()}>
+                    <Text style={{color: "#fff", fontWeight: 'bold'}}>Excluir</Text>
+                </ButtonDelete>
             </Container>
         </Layout>
     );
