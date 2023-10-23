@@ -132,7 +132,7 @@ function StackNativeRoutes() {
                         borderBottomColor: "#fdf1e7"
                     },
                     headerTintColor: "#55311b",
-                    headerTitleAlign: "center"
+                    headerTitleAlign: "center",
                 }}
             />
             <StackRoutes.Screen
