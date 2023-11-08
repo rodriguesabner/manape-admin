@@ -15,7 +15,7 @@ const DetailMenu = () => {
     const [items, setItems] = useState([])
     const [idDocument, setIdDocument] = useState()
 
-    const {item} = route.params
+    const {item} = route.params as any
 
     useEffect(() => {
         setItems(item.items)
@@ -35,24 +35,19 @@ const DetailMenu = () => {
                 `Você tem certeza que deseja remover o item "${item.name}"?`,
                 [
                     {
+                        text: "Não",
+                        onPress: () => {
+                            return;
+                        }
+                    },
+                    {
                         text: "Sim",
                         onPress: () => {
                             setItems(items.filter((itemList: any) => itemList.name !== item.name))
                         }
                     },
-                    {
-                        text: "Não",
-                        onPress: () => {
-                            return;
-                        }
-                    }
                 ]
             )
-        }
-
-        async function deleteItem() {
-            const choosedItem = ref(db, `menus/${idDocument}/items/${item.id}`);
-            await remove(choosedItem);
         }
 
         return (
@@ -76,17 +71,17 @@ const DetailMenu = () => {
             undefined,
             [
                 {
+                    text: "Não",
+                    onPress: () => {
+                        return;
+                    }
+                },
+                {
                     text: "Sim",
                     onPress: () => {
                         removeItem()
                     }
                 },
-                {
-                    text: "Não",
-                    onPress: () => {
-                        return;
-                    }
-                }
             ]
         )
     }
@@ -97,17 +92,17 @@ const DetailMenu = () => {
             undefined,
             [
                 {
+                    text: "Não",
+                    onPress: () => {
+                        return;
+                    }
+                },
+                {
                     text: "Sim",
                     onPress: () => {
                         setMenuDefault()
                     }
                 },
-                {
-                    text: "Não",
-                    onPress: () => {
-                        return;
-                    }
-                }
             ]
         )
     }
@@ -142,7 +137,9 @@ const DetailMenu = () => {
     return (
         <Layout>
             <Container>
-                <Title>Este cardápio de marmitas foi criado no dia: {item.date.split(" ")[0]}.</Title>
+                <Title>
+                    Este cardápio de marmitas foi criado no dia: {item.date.split(" ")[0]} às {item.date.split(" ")[1]}.
+                </Title>
 
                 <Image
                     source={Plant}
@@ -173,16 +170,23 @@ const DetailMenu = () => {
                         data={items}
                         contentContainerStyle={{gap: 20}}
                         keyExtractor={(item, index) => index.toString()}
-                        renderItem={({item, index}) => (
-                            <ItemDetail id={item.id} idDocument={idDocument} name={item.name}
-                                        description={item.description}/>
+                        renderItem={({item, index}: { item: any, index: number }) => (
+                            <ItemDetail
+                                id={item.id}
+                                idDocument={idDocument}
+                                name={item.name}
+                                description={item.description}
+                            />
                         )}
                     />
                 )}
 
-                <ButtonEdit onPress={() => toDefault()}>
-                    <Text style={{color: "#fff", fontWeight: 'bold'}}>Tornar Padrão</Text>
-                </ButtonEdit>
+                {!item.active && (
+                    <ButtonEdit onPress={() => toDefault()}>
+                        <Text style={{color: "#fff", fontWeight: 'bold'}}>Tornar Padrão</Text>
+                    </ButtonEdit>
+                )}
+
                 <ButtonDelete style={{marginTop: 16}} onPress={() => deleteItem()}>
                     <Text style={{color: "#fff", fontWeight: 'bold'}}>Excluir</Text>
                 </ButtonDelete>

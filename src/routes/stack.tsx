@@ -11,6 +11,12 @@ import Testimonials from "../screens/Testimonials";
 import CreateTestimonial from "../screens/Testimonials/Create";
 import DetailTestimonial from "../screens/Testimonials/Detail";
 import EditTestimonial from "../screens/Testimonials/Edit";
+import Login from "../screens/Login";
+import MainMenu from "../screens/MainMenu";
+import CreateCategoryMainMenu from "../screens/MainMenu/CreateCategory";
+import DetailCategoryMainMenu from "../screens/MainMenu/Detail";
+import CreateProduct from "../screens/MainMenu/CreateProduct";
+import EditProductItem from "../screens/MainMenu/Edit";
 
 const StackRoutes = createNativeStackNavigator();
 
@@ -24,6 +30,13 @@ function StackNativeRoutes() {
 
             initialRouteName="Home"
         >
+            <StackRoutes.Screen
+                name="Login"
+                component={Login}
+                options={{
+                    headerShown: false,
+                }}
+            />
             <StackRoutes.Screen
                 name="Home"
                 component={Home}
@@ -62,6 +75,85 @@ function StackNativeRoutes() {
                 options={{
                     headerShown: true,
                     headerTitle: "Marmitas da Semana",
+                    headerBlurEffect: "systemUltraThinMaterial",
+                    headerStyle: {
+                        backgroundColor: "#fdf1e7",
+                        borderBottomWidth: 1,
+                        borderBottomColor: "#fdf1e7"
+                    },
+                    headerTintColor: "#55311b",
+                    headerTitleAlign: "center"
+                }}
+            />
+            <StackRoutes.Screen
+                name="MainMenu"
+                component={MainMenu}
+                options={{
+                    headerShown: true,
+                    headerTitle: "Cardápio",
+                    headerBlurEffect: "systemUltraThinMaterial",
+                    headerStyle: {
+                        backgroundColor: "#fdf1e7",
+                        borderBottomWidth: 1,
+                        borderBottomColor: "#fdf1e7"
+                    },
+                    headerTintColor: "#55311b",
+                    headerTitleAlign: "center"
+                }}
+            />
+            <StackRoutes.Screen
+                name="CreateCategoryMainMenu"
+                component={CreateCategoryMainMenu}
+                options={{
+                    headerShown: true,
+                    headerTitle: "Criar Categoria",
+                    headerBlurEffect: "systemUltraThinMaterial",
+                    headerStyle: {
+                        backgroundColor: "#fdf1e7",
+                        borderBottomWidth: 1,
+                        borderBottomColor: "#fdf1e7"
+                    },
+                    headerTintColor: "#55311b",
+                    headerTitleAlign: "center"
+                }}
+            />
+            <StackRoutes.Screen
+                name="DetailCategoryMainMenu"
+                component={DetailCategoryMainMenu}
+                options={{
+                    headerShown: true,
+                    headerBlurEffect: "systemUltraThinMaterial",
+                    headerStyle: {
+                        backgroundColor: "#fdf1e7",
+                        borderBottomWidth: 1,
+                        borderBottomColor: "#fdf1e7"
+                    },
+                    headerTintColor: "#55311b",
+                    headerTitleAlign: "center"
+                }}
+            />
+            <StackRoutes.Screen
+                name="CreateProduct"
+                component={CreateProduct}
+                options={{
+                    headerShown: true,
+                    headerTitle: "Criar Produto",
+                    headerBlurEffect: "systemUltraThinMaterial",
+                    headerStyle: {
+                        backgroundColor: "#fdf1e7",
+                        borderBottomWidth: 1,
+                        borderBottomColor: "#fdf1e7"
+                    },
+                    headerTintColor: "#55311b",
+                    headerTitleAlign: "center"
+                }}
+            />
+            <StackRoutes.Screen
+                name="EditProduct"
+                component={EditProductItem}
+                options={{
+                    headerShown: true,
+                    headerTitle: "Editar Produto",
                     headerBlurEffect: "systemUltraThinMaterial",
                     headerStyle: {
                         backgroundColor: "#fdf1e7",

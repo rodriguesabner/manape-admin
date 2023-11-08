@@ -2,17 +2,18 @@ import {StatusBar} from 'expo-status-bar';
 import {LogBox, StyleSheet, View} from 'react-native';
 import {Routes} from "./src/routes";
 import {useFonts} from "expo-font"
+import {useCallback} from "react";
+import * as SplashScreen from 'expo-splash-screen';
 import GFSDidot from "./src/assets/fonts/gfs-didot/GFSDidot-Regular.ttf";
 import QuickSandBold from "./src/assets/fonts/quicksand/Quicksand-Bold.ttf";
 import QuickSandRegular from "./src/assets/fonts/quicksand/Quicksand-Regular.ttf";
 import QuickSandLight from "./src/assets/fonts/quicksand/Quicksand-Light.ttf";
 import QuickSandMedium from "./src/assets/fonts/quicksand/Quicksand-Medium.ttf";
 import QuickSandSemiBold from "./src/assets/fonts/quicksand/Quicksand-SemiBold.ttf";
-import {useCallback} from "react";
-import * as SplashScreen from 'expo-splash-screen';
 
 export default function App() {
     LogBox.ignoreAllLogs(true);
+
     const [fontsLoaded, fontError] = useFonts({
         "GFS Didot": GFSDidot,
         "Quicksand Bold": QuickSandBold,

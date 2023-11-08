@@ -22,18 +22,18 @@ const CreateTestimonial = (props: CreateMenuProps) => {
             undefined,
             [
                 {
+                    text: "Não",
+                    onPress: () => {
+                        return;
+                    }
+                },
+                {
                     text: "Sim",
                     onPress: () => {
                         setLoading(true)
                         storeDataFirebase()
                     }
                 },
-                {
-                    text: "Não",
-                    onPress: () => {
-                        return;
-                    }
-                }
             ]
         )
     }

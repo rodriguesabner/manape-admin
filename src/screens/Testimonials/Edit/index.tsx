@@ -60,17 +60,17 @@ const EditTestimonial = (props: EditItemProps) => {
             `Você tem certeza que deseja alterar o depoimento da "${name}"?`,
             [
                 {
+                    text: "Não",
+                    onPress: () => {
+                        return;
+                    }
+                },
+                {
                     text: "Sim",
                     onPress: () => {
                         storeDataFirebase()
                     }
                 },
-                {
-                    text: "Não",
-                    onPress: () => {
-                        return;
-                    }
-                }
             ]
         )
     }

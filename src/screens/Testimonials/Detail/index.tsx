@@ -12,7 +12,7 @@ const DetailTestimonial = () => {
     const navigation = useNavigation<NavigationProp<any>>()
     const route = useRoute()
 
-    const {item} = route.params
+    const {item} = route.params as any
 
     useEffect(() => {
         navigation.setOptions({title: item.name})
@@ -24,17 +24,17 @@ const DetailTestimonial = () => {
             undefined,
             [
                 {
+                    text: "Não",
+                    onPress: () => {
+                        return;
+                    }
+                },
+                {
                     text: "Sim",
                     onPress: () => {
                         removeItem()
                     }
                 },
-                {
-                    text: "Não",
-                    onPress: () => {
-                        return;
-                    }
-                }
             ]
         )
     }

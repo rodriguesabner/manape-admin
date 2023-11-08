@@ -24,7 +24,7 @@ interface CreateMenuProps {
 }
 
 const CreateMenu = (props: CreateMenuProps) => {
-    const [items, setItems] = useState([])
+    const [items, setItems] = useState<any[]>([])
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
     const [loading, setLoading] = useState(false)
@@ -70,17 +70,17 @@ const CreateMenu = (props: CreateMenuProps) => {
             `Você tem certeza que deseja remover o item "${name}"?`,
             [
                 {
+                    text: "Não",
+                    onPress: () => {
+                        return;
+                    }
+                },
+                {
                     text: "Sim",
                     onPress: () => {
                         setItems(items.filter(item => item.name !== name))
                     }
                 },
-                {
-                    text: "Não",
-                    onPress: () => {
-                        return;
-                    }
-                }
             ]
         )
     }
@@ -91,18 +91,18 @@ const CreateMenu = (props: CreateMenuProps) => {
             undefined,
             [
                 {
+                    text: "Não",
+                    onPress: () => {
+                        return;
+                    }
+                },
+                {
                     text: "Sim",
                     onPress: () => {
                         setLoading(true)
                         storeDataFirebase()
                     }
                 },
-                {
-                    text: "Não",
-                    onPress: () => {
-                        return;
-                    }
-                }
             ]
         )
     }

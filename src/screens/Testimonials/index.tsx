@@ -40,10 +40,11 @@ const Testimonials = () => {
                     return moment(b.date).diff(moment(a.date))
                 })
                 setTestimonials(orderByDateDesc)
+                setScreenLoading(false)
             });
         }
 
-        void getItems().then(() => setScreenLoading(false))
+        void getItems()
     }, []);
 
     const goTo = (path: string) => {

@@ -1,5 +1,6 @@
-import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
+import {initializeApp} from "firebase/app";
+import {getDatabase} from "firebase/database";
+import {getStorage} from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDvee7rtnrjcf6JkUvuDZoeihW30RWuvfA",
@@ -12,6 +13,8 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
 
-export { db };
+const db = getDatabase(app);
+const storage = getStorage(app, "gs://manape-vegan.appspot.com");
+
+export {db, storage};

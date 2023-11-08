@@ -4,7 +4,11 @@ import StackRoutes from './stack';
 
 function Routes() {
     return (
-        <NavigationContainer>
+        <NavigationContainer
+            linking={{
+                prefixes: ['http://admin.manape.com.br', 'manape-admin://'],
+            }}
+        >
             <StackRoutes/>
         </NavigationContainer>
     );

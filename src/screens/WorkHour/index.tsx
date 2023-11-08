@@ -17,15 +17,16 @@ const WorkHour = () => {
     useEffect(() => {
         async function getWorkHours() {
             const workHours = ref(db, 'work_hours');
-            await onValue(workHours, (snapshot) => {
+            onValue(workHours, (snapshot) => {
                 const data = snapshot.val();
-                setWeek(data.week)
-                setSaturday(data.saturday)
-                setSunday(data.sunday)
+                setWeek(data.week);
+                setSaturday(data.saturday);
+                setSunday(data.sunday);
+                setScreenLoading(false)
             });
         }
 
-        void getWorkHours().then(() => setScreenLoading(false))
+        void getWorkHours()
     }, []);
 
     const storeDataFirebase = async () => {
@@ -50,17 +51,17 @@ const WorkHour = () => {
             `Você tem certeza que deseja salvar o horário de funcionamento?`,
             [
                 {
+                    text: "Não",
+                    onPress: () => {
+                        return;
+                    }
+                },
+                {
                     text: "Sim",
                     onPress: () => {
                         void storeData()
                     }
                 },
-                {
-                    text: "Não",
-                    onPress: () => {
-                        return;
-                    }
-                }
             ])
     }
 

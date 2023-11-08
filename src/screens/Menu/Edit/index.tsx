@@ -61,17 +61,17 @@ const EditItem = (props: EditItemProps) => {
             `Você tem certeza que deseja alterar o item "${name}"?`,
             [
                 {
+                    text: "Não",
+                    onPress: () => {
+                        return;
+                    }
+                },
+                {
                     text: "Sim",
                     onPress: () => {
                         storeDataFirebase()
                     }
                 },
-                {
-                    text: "Não",
-                    onPress: () => {
-                        return;
-                    }
-                }
             ]
         )
     }

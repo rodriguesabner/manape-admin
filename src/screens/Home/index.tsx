@@ -28,6 +28,10 @@ const Home = () => {
                 <Image source={Plant} style={{width: 150, height: 60, marginLeft: -40, marginTop: 20}} resizeMode={"contain"}/>
 
                 <WrapperMenu>
+                    <Button onPress={() => goTo('MainMenu')}>
+                        <TextButton>Cardápio</TextButton>
+                    </Button>
+
                     <Button onPress={() => goTo('Menu')}>
                         <TextButton>Marmitas da Semana</TextButton>
                     </Button>

@@ -3,11 +3,9 @@ import {ActivityIndicator, Image, View} from "react-native";
 import {
     Button,
     Container,
-    InputSearch,
     ItemMenu,
     Layout,
     ListMenuOld,
-    SearchWrapper,
     TextButton,
     TextItemMenu,
     Title,
@@ -22,7 +20,7 @@ import moment from "moment";
 
 const Menu = () => {
     const navigation = useNavigation<NavigationProp<any>>()
-    const [menu, setMenu] = useState([])
+    const [menu, setMenu] = useState<MenuList[]>([])
     const [screenLoading, setScreenLoading] = useState(true)
 
     useEffect(() => {
@@ -39,14 +37,15 @@ const Menu = () => {
                     }
                 })
 
-                const orderByDateDesc = menus.sort((a, b) => {
+                const orderByDateDesc: MenuList[] = menus.sort((a, b) => {
                     return moment(b.date, "DD/MM/YYYY HH:mm:ss").diff(moment(a.date, "DD/MM/YYYY HH:mm:ss"))
                 })
                 setMenu(orderByDateDesc)
+                setScreenLoading(false)
             });
         }
 
-        void getItems().then(() => setScreenLoading(false))
+        void getItems()
     }, []);
 
     const goTo = (path: string) => {
@@ -87,14 +86,14 @@ const Menu = () => {
 
                             <ListMenuOld
                                 data={menu}
-                                renderItem={({item}) => (
+                                renderItem={({item}: { item: any }) => (
                                     <ItemMenu onPress={() => goToDetail(item)}>
                                         {item.active === true &&
                                             <Image source={Heart} style={{width: 40, height: 30, marginLeft: -5}}/>}
                                         <TextItemMenu>{item.date.split(" ")[0]}</TextItemMenu>
                                     </ItemMenu>
                                 )}
-                                keyExtractor={(item, index) => index.toString()}
+                                keyExtractor={(item: MenuItems, index: number) => index.toString()}
                             />
                         </View>
                     </WrapperContainer>
