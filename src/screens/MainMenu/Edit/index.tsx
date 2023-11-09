@@ -40,25 +40,6 @@ const EditProductItem = (props: EditItemProps) => {
         setCategory(item.idDocument)
     }, []);
 
-    useEffect(() => {
-        async function getItemStorage() {
-            const data = await AsyncStorage.getItem('suggestion');
-            if (data) {
-                const item = JSON.parse(data);
-                setName(item.name)
-                setDescription(item.description)
-
-                await AsyncStorage.removeItem('suggestion');
-            }
-        }
-
-        const unsubscribe = props.navigation.addListener('focus', () => {
-            getItemStorage()
-        });
-
-        return unsubscribe;
-    }, [props.navigation]);
-
     const handleSaveMenu = () => {
         Vibration.vibrate(100)
         Alert.alert(
@@ -93,7 +74,6 @@ const EditProductItem = (props: EditItemProps) => {
         const dbRef = ref(db, `main_menu/${id}`);
         await update(dbRef, data);
 
-        setLoading(false)
         Alert.alert(
             "O item foi alterado com sucesso!",
             undefined,
@@ -102,7 +82,7 @@ const EditProductItem = (props: EditItemProps) => {
                     text: "Ok",
                     onPress: () => {
                         props.navigation.goBack()
-                        return;
+                        setLoading(false)
                     }
                 }
             ]
@@ -139,10 +119,6 @@ const EditProductItem = (props: EditItemProps) => {
                     placeholder="Há algum pedido mínimo? Informe aqui"
                     onChangeText={setAdditional}
                     value={additional}/>
-
-                <SuggestionButton onPress={() => props.navigation.navigate("Suggestions")}>
-                    <SuggestionTextButton>Sugestões</SuggestionTextButton>
-                </SuggestionButton>
 
                 <ButtonFinish onPress={() => handleSaveMenu()}>
                     <TextButton>
