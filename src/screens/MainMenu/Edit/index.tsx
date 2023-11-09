@@ -25,17 +25,17 @@ const EditProductItem = (props: EditItemProps) => {
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
     const [loading, setLoading] = useState(false)
-    const [additional, setAdditional] = useState()
-    const [price, setPrice] = useState()
-    const [id, setId] = useState()
-    const [category, setCategory] = useState()
+    const [additional, setAdditional] = useState('')
+    const [price, setPrice] = useState('')
+    const [id, setId] = useState('')
+    const [category, setCategory] = useState('')
 
     useEffect(() => {
         const {item} = props.route.params
-        setName(item.name)
-        setDescription(item.description)
-        setAdditional(item.additional)
-        setPrice(item.price)
+        setName(item.name ?? '')
+        setDescription(item.description ?? '')
+        setAdditional(item.additional ?? '')
+        setPrice(item.price ?? '')
         setId(item.id)
         setCategory(item.idDocument)
     }, []);
@@ -72,6 +72,7 @@ const EditProductItem = (props: EditItemProps) => {
         }
 
         const dbRef = ref(db, `main_menu/${id}`);
+        console.log(id)
         await update(dbRef, data);
 
         Alert.alert(
@@ -87,7 +88,6 @@ const EditProductItem = (props: EditItemProps) => {
                 }
             ]
         )
-
     }
 
     return (
